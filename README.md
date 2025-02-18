@@ -1,2 +1,2 @@
 # Netwerken-en-Security-Vervolg
-Netwerken begin
+Dit was makkelijker dan mees het deed UwU
