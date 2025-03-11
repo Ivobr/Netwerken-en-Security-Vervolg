@@ -1,6 +1,7 @@
 
-    // const broker = "ws://localhost:9001"; //websocket port
-    const broker = "ws://host.docker.internal:9001";
+    const broker = "ws://localhost:1884"; //websocket port
+    // const broker = "ws://host.docker.internal:9001";
+    const username = Math.floor(Math.random() * 1000);
 
 
     const options = {
@@ -40,9 +41,10 @@
     function send(event){
         event.preventDefault();
         var data = document.getElementById("data");
-        client.publish(topic, data.value);
+        var dataSend = (username + ": " + data.value);
+        client.publish(topic, dataSend);
         // client.end();
-        console.log(data.value);
+        console.log(dataSend);
         
         data.value="";
     }
