@@ -1,23 +1,34 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Weboscoket MQTT</title>
-        <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
-        <script src="main.js"></script>
-        <link rel="stylesheet" href="style.css">
-      </head>
-    <body>
-        <div id="connection"></div>
-        <form onsubmit="login(event)">
-            <input type="text" id="Username" Placeholder="Username">
-            <br/>
-            <input type="password" id="Password" placeholder="Password">
-            <br/>
-            <button type="submit" id="LogIn">Log In</button>
-            <br/>
-            <div id="Login-error"></div>
-          </form>
-    </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weboscoket MQTT</title>
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <script src="main.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body onload="initializeClient()">
+  <h1>chat</h1>
+
+  <div id="connection"></div>
+  <form onsubmit="login(event)">
+      <input type="text" id="Username" Placeholder="Username">
+      <br/>
+      <input type="password" id="Password" placeholder="Password">
+      <br/>
+      <button type="submit" id="LogIn">Log In</button>
+      <br/>
+      <div id="Login-error"></div>
+    </form>
+
+  <div id="connection"></div>
+  <div id="chat"></div>
+  <form onsubmit="send(event)">
+    <input type="text" id="data">
+    <button type="submit" id="sendButton" >Send</button>
+</form>
+
+  
+</body>
 </html>

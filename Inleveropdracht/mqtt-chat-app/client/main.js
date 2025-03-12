@@ -35,37 +35,43 @@ function login(event){
 
         client.subscribe(topic, (err) =>{
             if(!err){
-                document.getElementById('connection').innerText ='connected'; //stuur opgevraagde
+                document.getElementById('connection').innerText ='connected'; 
 
                 const JoinMessage = username + ": joind the chat." 
                 client.publish(topic, JoinMessage);
 
                 localStorage.setItem('username', username);
                 localStorage.getItem('broker', broker);
-                window.location.href = 'ChatRoom.html';
             } else{
                 
             }
         });
     });
-
-    //getting the message
     client.on('message', (topic, message) => {
         const chat = document.getElementById('chat');
         const msg = document.createElement('div');
         msg.textContent = message.toString();
         chat.appendChild(msg);
     });
+ 
 }
 
 
     function send(event){
+        try{
         event.preventDefault();
         const message = document.getElementById('data').value;
-        console.log(username);
+        
+        var data = document.getElementById('data').value;
+
+        const dataSend = username + ": "+ data;
+        client.publish(topic, dataSend);
+        console.log(dataSend);
 
         
-        const dataSend = `${username}: ${message}`;
-        client.publish(topic, dataSend);
+   
         document.getElementById('data').value = '';
+        }catch(error){
+            document.getElementById('connection').innerText = 'Log eerst in dip shit';
+        }
     }
