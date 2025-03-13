@@ -1,7 +1,18 @@
 let client;
 let topic = "chatroom";
 let username;
-    
+
+function showPage(pageId) {
+    var pages = document.querySelectorAll('.page');
+    pages.forEach(function(page) {
+      if (page.id === pageId) {
+        page.style.display = 'block';
+      } else {
+        page.style.display = 'none';
+      }
+    });
+  }
+
 function login(event){
     event.preventDefault();
 
@@ -13,7 +24,7 @@ function login(event){
         return;
     }
 
-    const broker = "ws://localhost:1884"; //websocket port
+    const broker = "ws://145.137.33.238:1884"; //websocket port
     const options = {
         username: username,
         password: password,
@@ -59,6 +70,9 @@ function login(event){
 
     function send(event){
         try{
+            if(username === 'User2'){
+                username = "Lesley is gay?!";
+            }
         event.preventDefault();
         const message = document.getElementById('data').value;
         
