@@ -1,55 +1,73 @@
 let client;
 let topic = "chatroom";
 let username;
-    
-function login(event){
-    event.preventDefault();
+
+function login(event) {
+    event.preventDefault(); // Prevent the form from submitting
 
     username = document.getElementById("Username").value;
     const password = document.getElementById("Password").value;
 
-    if( !username || !password){
-        document.getElementById('Login-error').innerText = 'Alsjeblieft vul gewoon alles in idioot';
+    if (!username || !password) {
+        document.getElementById('Login-error').innerText = 'Please enter both username and password';
         return;
     }
 
-    const broker = "ws://localhost:1884"; //websocket port
+    const broker = "ws://145.137.33.238:1884"; // WebSocket port
     const options = {
         username: username,
         password: password,
-    }
- 
-
+    };
 
     client = mqtt.connect(broker, options);
 
-    // const client = mqtt.connect(broker);
-
-    client.on('error', (error) =>{
+    client.on('error', (error) => {
         console.error("Connection error: ", error);
-        document.getElementById('Login-error').innerText = 'Log in Failed';
+        document.getElementById('Login-error').innerText = 'Login failed';
     });
 
-    // when client gets connection to page
-    client.on('connect', () => { 
-
-        client.subscribe(topic, (err) =>{
-            if(!err){
-                document.getElementById('connection').innerText ='connected'; //stuur opgevraagde
-
-                const JoinMessage = username + ": joind the chat." 
+    client.on('connect', () => {
+        client.subscribe(topic, (err) => {
+            if (!err) {
+                const JoinMessage = username + ": joined the chat.";
                 client.publish(topic, JoinMessage);
-
+                // Store client and username in localStorage
                 localStorage.setItem('username', username);
-                localStorage.getItem('broker', broker);
+                localStorage.setItem('broker', broker);
+                // Redirect to the chat page
                 window.location.href = 'ChatRoom.html';
-            } else{
-                
+            } else {
+                console.error("Subscription error: ", err);
+            }
+        });
+    });
+}
+
+function initializeClient() {
+    const broker = localStorage.getItem('broker');
+    const WindowUsername = localStorage.getItem('username');
+
+    username = WindowUsername;
+
+    if (!broker || !username) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    const options = {
+        username: username,
+    };
+
+    client = mqtt.connect(broker, options);
+
+    client.on('connect', () => {
+        client.subscribe(topic, (err) => {
+            if (err) {
+                console.error("Subscription error: ", err);
             }
         });
     });
 
-    //getting the message
     client.on('message', (topic, message) => {
         const chat = document.getElementById('chat');
         const msg = document.createElement('div');
@@ -58,14 +76,19 @@ function login(event){
     });
 }
 
+function send(event) {
+    event.preventDefault(); // Prevent the form from submitting
 
-    function send(event){
-        event.preventDefault();
-        const message = document.getElementById('data').value;
-        console.log(username);
+    const message = document.getElementById('data').value;
+    const dataSend = `${username}: ${message}`;
+    client.publish(topic, dataSend);
+    console.log(dataSend);
 
-        
-        const dataSend = `${username}: ${message}`;
-        client.publish(topic, dataSend);
-        document.getElementById('data').value = '';
-    }
+    // Append the sent message to the chat div
+    const chat = document.getElementById('chat');
+    const msg = document.createElement('div');
+    msg.textContent = dataSend;
+    chat.appendChild(msg);
+
+    document.getElementById('data').value = '';
+}

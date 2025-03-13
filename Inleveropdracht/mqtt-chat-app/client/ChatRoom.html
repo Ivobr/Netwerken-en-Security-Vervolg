@@ -3,20 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weboscoket MQTT</title>
+  <title>Websocket MQTT</title>
   <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
   <script src="main.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body onload="initializeClient()">
   <h1>chat</h1>
 
   <div id="connection"></div>
   <div id="chat"></div>
   <form onsubmit="send(event)">
     <input type="text" id="data">
-    <button type="submit" id="sendButton" >Send</button>
-</form>
-
-  
+    <button type="submit" id="sendButton">Send</button>
+  </form>
 </body>
+</html>
