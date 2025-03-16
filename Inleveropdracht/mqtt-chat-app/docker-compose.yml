@@ -1,4 +1,4 @@
-
+version: '3.7'
 services:
   web:
     image: nginx
@@ -15,7 +15,8 @@ services:
     ports:
       - "1883:1883"
       - "1884:1884"
+      - "443:443"
     volumes:
       - ./mosquitto:/etc/mosquitto
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
-  
+      - ./mosquitto/certs:/etc/mosquitto/certs

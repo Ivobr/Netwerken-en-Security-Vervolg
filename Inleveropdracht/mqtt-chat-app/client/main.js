@@ -11,81 +11,70 @@ function showPage(pageId) {
         page.style.display = 'none';
       }
     });
-  }
+}
 
-function login(event){
-    event.preventDefault();
+function login(event) {
+    event.preventDefault(); // Prevent the form from submitting
 
     username = document.getElementById("Username").value;
     const password = document.getElementById("Password").value;
 
-    if( !username || !password){
-        document.getElementById('Login-error').innerText = 'Alsjeblieft vul gewoon alles in idioot';
+    if (!username || !password) {
+        document.getElementById('Login-error').innerText = 'Please enter both username and password';
         return;
     }
 
-    const broker = "ws://145.137.33.238:1884"; //websocket port
+    const broker = "wss://localhost:443"; // WebSocket Secure port
     const options = {
         username: username,
         password: password,
-    }
- 
-
+        rejectUnauthorized: false // This is needed if using self-signed certificates
+    };
 
     client = mqtt.connect(broker, options);
 
-    // const client = mqtt.connect(broker);
-
-    client.on('error', (error) =>{
+    client.on('error', (error) => {
         console.error("Connection error: ", error);
-        document.getElementById('Login-error').innerText = 'Log in Failed';
+        document.getElementById('Login-error').innerText = 'Login failed';
     });
 
-    // when client gets connection to page
-    client.on('connect', () => { 
-
-        client.subscribe(topic, (err) =>{
-            if(!err){
-                document.getElementById('connection').innerText ='connected'; 
-
-                const JoinMessage = username + ": joind the chat." 
+    client.on('connect', () => {
+        client.subscribe(topic, (err) => {
+            if (!err) {
+                const JoinMessage = username + ": joined the chat.";
                 client.publish(topic, JoinMessage);
-
+                // Store client and username in localStorage
                 localStorage.setItem('username', username);
-                localStorage.getItem('broker', broker);
-            } else{
-                
+                localStorage.setItem('broker', broker);
+                // Switch to the chat page
+                showPage('chat');
+            } else {
+                console.error("Subscription error: ", err);
             }
         });
     });
+
     client.on('message', (topic, message) => {
         const chat = document.getElementById('chat');
         const msg = document.createElement('div');
         msg.textContent = message.toString();
         chat.appendChild(msg);
     });
- 
 }
 
+function send(event) {
+    event.preventDefault(); // Prevent the form from submitting
 
-    function send(event){
-        try{
-            if(username === 'User2'){
-                username = "Lesley is gay?!";
-            }
-        event.preventDefault();
-        const message = document.getElementById('data').value;
-        
-        var data = document.getElementById('data').value;
+    const message = document.getElementById('data').value;
+    const dataSend = `${username}: ${message}`;
+    client.publish(topic, dataSend);
+    console.log(dataSend);
 
-        const dataSend = username + ": "+ data;
-        client.publish(topic, dataSend);
-        console.log(dataSend);
+    // Append the sent message to the chat div
+    const chat = document.getElementById('chat');
+    const msg = document.createElement('div');
+    msg.textContent = dataSend;
+    chat.appendChild(msg);
 
-        
-   
-        document.getElementById('data').value = '';
-        }catch(error){
-            document.getElementById('connection').innerText = 'Log eerst in dip shit';
-        }
-    }
+    document.getElementById('data').value = '';
+}
