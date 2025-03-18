@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Worst styled chat</title>
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <script src="main.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body onload="showPage('login')">
+ 
+
+  <section id="login" class="page">
+    <h1>Log In</h1>
+
+    <div id="connection"></div>
+    <form onsubmit="login(event)">
+        <input type="text" id="Username" Placeholder="Username">
+        <br/>
+        <input type="password" id="Password" placeholder="Password">
+        <br/>
+        <button type="submit" id="LogIn">Log In</button>
+        <br/>
+        <div id="Login-error"></div>
+      </form>
+  </section>
+
+  <section id="chat" class="page">
+    <h1>Chat</h1>
+    <form onsubmit="send(event)">
+      <div id="chat-box" ></div>
+      <input type="text" id="data">
+      <button type="submit" id="sendButton" >Send</button>
+    </form>
+  </section>
+
+
+  
+</body>
+</html>

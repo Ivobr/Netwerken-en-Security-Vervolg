@@ -10,3 +10,7 @@
 ### MQTT
 MQTT is een messaging protocol wat erg low energy is.
 
+Encrypt password
+```
+docker exec mosquitto mosquitto_passwd -U /etc/mosquitto/passwd
+```
